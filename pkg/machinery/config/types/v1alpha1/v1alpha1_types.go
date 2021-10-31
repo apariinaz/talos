@@ -454,6 +454,10 @@ metadata:
 		},
 	}
 
+	clusterImagesCacheExample = ClusterImagesCache{
+		CachePath: "/var/cache-archive/k8s-images",
+	}
+
 	networkKubeSpanExample = NetworkKubeSpan{
 		KubeSpanEnabled: true,
 	}
@@ -808,6 +812,11 @@ type ClusterConfig struct {
 	//   examples:
 	//     - value: clusterInlineManifestsExample
 	ClusterInlineManifests ClusterInlineManifests `yaml:"inlineManifests,omitempty" talos:"omitonlyifnil"`
+	//   description: |
+	//     Provides Kubernetes images cache settings
+	//   examples:
+	//     - value: clusterImagesCacheExample
+	ClusterImagesCache *ClusterImagesCache `yaml:"imagesCache,omitempty"` // Note: The specified `path` is relative to `/var`.
 	//   description: |
 	//     Settings for admin kubeconfig generation.
 	//     Certificate lifetime can be configured.
@@ -1978,6 +1987,15 @@ type ClusterInlineManifest struct {
 	//   examples:
 	//     - value: '"/etc/kubernetes/auth"'
 	InlineManifestContents string `yaml:"contents"`
+}
+
+// ClusterImagesCache describes a cache for providing necessary Kubernetes images.
+type ClusterImagesCache struct {
+	//   description: |
+	//     The path of the K8s images cache.
+	//   examples:
+	//     - value: '"/var/cache-archive/k8s-images"'
+	CachePath string `yaml:"path"` // Note: The specified `path` is relative to `/var`.
 }
 
 // NetworkKubeSpan struct describes KubeSpan configuration.

@@ -308,6 +308,7 @@ type ClusterConfig interface {
 	ExtraManifestURLs() []string
 	ExtraManifestHeaderMap() map[string]string
 	InlineManifests() []InlineManifest
+	ImagesCache() ImagesCache
 	AdminKubeconfig() AdminKubeconfig
 	ScheduleOnMasters() bool
 	Discovery() Discovery
@@ -455,6 +456,11 @@ type VolumeMount interface {
 type InlineManifest interface {
 	Name() string
 	Contents() string
+}
+
+// Cache describes cache for Kubernetes images.
+type ImagesCache interface {
+	Path() string
 }
 
 // Discovery describes cluster membership discovery.

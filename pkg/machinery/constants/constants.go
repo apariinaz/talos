@@ -521,6 +521,9 @@ const (
 
 	// LoggingFormatJSONLines represents "JSON lines" logging format.
 	LoggingFormatJSONLines = "json_lines"
+
+	// CacheImagesDir represents the default path of the Kubernetes images cache.
+	CacheImagesDir = "/var/cache-archive/k8s-images"
 )
 
 // See https://linux.die.net/man/3/klogctl
