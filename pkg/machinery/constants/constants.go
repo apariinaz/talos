@@ -521,6 +521,9 @@ const (
 
 	// LoggingFormatJSONLines represents "JSON lines" logging format.
 	LoggingFormatJSONLines = "json_lines"
+
+	// KubernetesContainerdNamespace is the Containerd namespace for Kubernetes containers.
+	KubernetesContainerdNamespace = "k8s.io"
 )
 
 // See https://linux.die.net/man/3/klogctl

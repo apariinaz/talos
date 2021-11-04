@@ -167,6 +167,17 @@ func (c *ClusterConfig) InlineManifests() []config.InlineManifest {
 	return manifests
 }
 
+// ImageCaches implements the config.ClusterConfig interface.
+func (c *ClusterConfig) ImageCaches() []config.ImageCache {
+	archives := make([]config.ImageCache, len(c.ClusterImageCaches))
+
+	for i := range archives {
+		archives[i] = c.ClusterImageCaches[i]
+	}
+
+	return archives
+}
+
 // AdminKubeconfig implements the config.ClusterConfig interface.
 func (c *ClusterConfig) AdminKubeconfig() config.AdminKubeconfig {
 	if c.AdminKubeconfigConfig == nil {

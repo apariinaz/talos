@@ -294,6 +294,93 @@ func TestValidate(t *testing.T) {
 			expectedError: "2 errors occurred:\n\t* inline manifest name can't be empty\n\t* inline manifest name \"foo\" is duplicate\n\n",
 		},
 		{
+			name: "ImageCacheInvalid",
+			config: &v1alpha1.Config{
+				ConfigVersion: "v1alpha1",
+				MachineConfig: &v1alpha1.MachineConfig{
+					MachineType: "controlplane",
+				},
+				ClusterConfig: &v1alpha1.ClusterConfig{
+					ControlPlane: &v1alpha1.ControlPlaneConfig{
+						Endpoint: &v1alpha1.Endpoint{
+							endpointURL,
+						},
+					},
+					ClusterImageCaches: []*v1alpha1.ClusterImageCache{
+						{
+							CacheNamespace: "",
+							CachePath:      "/var/cache-archive/emptyNamespace",
+						},
+						{
+							CacheNamespace: constants.SystemContainerdNamespace,
+							CachePath:      "",
+						},
+						{
+							CacheNamespace: "default",
+							CachePath:      "/var/cache-archive/default",
+						},
+					},
+				},
+			},
+			expectedError: "3 errors occurred:\n\t* namespace for images should be one of [\"k8s.io\", \"system\"]\n" +
+				"\t* cache path can't be empty\n" +
+				"\t* namespace for images should be one of [\"k8s.io\", \"system\"]\n\n",
+		},
+		{
+			name: "ImageCacheDuplicatePath",
+			config: &v1alpha1.Config{
+				ConfigVersion: "v1alpha1",
+				MachineConfig: &v1alpha1.MachineConfig{
+					MachineType: "worker",
+				},
+				ClusterConfig: &v1alpha1.ClusterConfig{
+					ControlPlane: &v1alpha1.ControlPlaneConfig{
+						Endpoint: &v1alpha1.Endpoint{
+							endpointURL,
+						},
+					},
+					ClusterImageCaches: []*v1alpha1.ClusterImageCache{
+						{
+							CacheNamespace: constants.SystemContainerdNamespace,
+							CachePath:      "/var/cache-archive/system",
+						},
+						{
+							CacheNamespace: constants.KubernetesContainerdNamespace,
+							CachePath:      "/var/cache-archive/system",
+						},
+					},
+				},
+			},
+			expectedError: "1 error occurred:\n\t* cache directory (\"/var/cache-archive/system\") is already used for another namespace\n\n",
+		},
+		{
+			name: "ImageCacheValid",
+			config: &v1alpha1.Config{
+				ConfigVersion: "v1alpha1",
+				MachineConfig: &v1alpha1.MachineConfig{
+					MachineType: "controlplane",
+				},
+				ClusterConfig: &v1alpha1.ClusterConfig{
+					ControlPlane: &v1alpha1.ControlPlaneConfig{
+						Endpoint: &v1alpha1.Endpoint{
+							endpointURL,
+						},
+					},
+					ClusterImageCaches: []*v1alpha1.ClusterImageCache{
+						{
+							CacheNamespace: constants.KubernetesContainerdNamespace,
+							CachePath:      "/var/cache-archive/k8s",
+						},
+						{
+							CacheNamespace: constants.SystemContainerdNamespace,
+							CachePath:      "/var/cache-archive/system",
+						},
+					},
+				},
+			},
+			expectedError: "",
+		},
+		{
 			name: "DeviceCIDRInvalid",
 			config: &v1alpha1.Config{
 				ConfigVersion: "v1alpha1",
